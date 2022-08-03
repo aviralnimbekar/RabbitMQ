@@ -4,15 +4,15 @@ spring:
     port: 5672
     username: guest
     password: guest
-    listener:
-      simple:
+#    listener:
+#      simple:
 #        default-requeue-rejected: false
-        retry:
-          enabled: true
-          initial-interval: 2s
-          max-attempts: 3
-          max-interval: 2s
-          multiplier: 1
+#        retry:
+#          enabled: true
+#          initial-interval: 2s
+#          max-attempts: 3
+#          max-interval: 2s
+#          multiplier: 1
 
 rabbitmq:
   queue:
@@ -23,4 +23,4 @@ rabbitmq:
     dlq: dlExchange
   routing:
     key: routingKey
-    dlKey: dlRutingKey
+    dlKey: dlRoutingKey
