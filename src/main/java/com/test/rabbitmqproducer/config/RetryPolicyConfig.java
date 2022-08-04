@@ -48,7 +48,7 @@ public class RetryPolicyConfig {
                 .retryPolicy(rejectionRetryPolicy())
                 .backOffOptions(2000L, 2, 3000L)
                 .recoverer(
-                        new RepublishMessageRecoverer(rabbitTemplate(), dlExchange, dlRoutingKey))
+                        new RepublishMessageRecoverer(rabbitTemplate(), dlExchange, ""))
                 .build();
     }
 

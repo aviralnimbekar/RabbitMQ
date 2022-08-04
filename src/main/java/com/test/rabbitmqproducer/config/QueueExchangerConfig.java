@@ -55,15 +55,25 @@ public class QueueExchangerConfig {
     }
 
     @Bean
-    public DirectExchange dlExchange() {
-        return new DirectExchange(dlExchange);
+    public FanoutExchange dlExchange() {
+        return new FanoutExchange(dlExchange);
     }
 
     @Bean
     public Binding dlqBinding() {
         return BindingBuilder.bind(dlQueue())
-                .to(dlExchange())
-                .with(dlRoutingKey);
+                .to(dlExchange());
+    }
+
+    @Bean
+    public Queue newDlQueue() {
+        return QueueBuilder.durable("newDlQueue").build();
+    }
+
+    @Bean
+    public Binding newDlqBinding() {
+        return BindingBuilder.bind(newDlQueue())
+                .to(dlExchange());
     }
 
 // Spring boot autoconfiguration provides following beans
