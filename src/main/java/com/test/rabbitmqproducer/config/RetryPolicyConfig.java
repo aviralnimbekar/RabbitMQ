@@ -39,7 +39,7 @@ public class RetryPolicyConfig {
         Map<Class<? extends Throwable>, Boolean> exceptionsMap = new HashMap<>();
         exceptionsMap.put(DoNotRetryException.class, false);//not retriable
         exceptionsMap.put(RetryException.class, true); //retriable
-        return new SimpleRetryPolicy(3, exceptionsMap, true);
+        return new SimpleRetryPolicy(3, exceptionsMap, true, true);
     }
 
     @Bean
