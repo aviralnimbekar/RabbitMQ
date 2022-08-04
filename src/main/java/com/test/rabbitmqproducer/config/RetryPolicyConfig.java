@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.retry.RepublishMessageRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
@@ -20,6 +21,13 @@ import java.util.Map;
 @Configuration
 public class RetryPolicyConfig {
 
+
+    @Value("${rabbitmq.exchange.dlq}")
+    private String dlExchange;
+
+    @Value("${rabbitmq.routing.dlKey}")
+    private String dlRoutingKey;
+
     // Needed for serializing incoming rabbit messages
     @Bean
     public Jackson2JsonMessageConverter converter() {
@@ -28,7 +36,7 @@ public class RetryPolicyConfig {
 
     @Bean
     public SimpleRetryPolicy rejectionRetryPolicy() {
-        Map<Class<? extends Throwable>, Boolean> exceptionsMap = new HashMap<Class<? extends Throwable>, Boolean>();
+        Map<Class<? extends Throwable>, Boolean> exceptionsMap = new HashMap<>();
         exceptionsMap.put(DoNotRetryException.class, false);//not retriable
         exceptionsMap.put(RetryException.class, true); //retriable
         return new SimpleRetryPolicy(3, exceptionsMap, true);
@@ -37,16 +45,15 @@ public class RetryPolicyConfig {
     @Bean
     RetryOperationsInterceptor interceptor() {
         return RetryInterceptorBuilder.stateless()
-//                .maxAttempts(3)
                 .retryPolicy(rejectionRetryPolicy())
                 .backOffOptions(2000L, 2, 3000L)
                 .recoverer(
-                        new RepublishMessageRecoverer(rabbitTemplate(), "dlExchange", "dlRoutingKey"))
+                        new RepublishMessageRecoverer(rabbitTemplate(), dlExchange, dlRoutingKey))
                 .build();
     }
 
     @Bean()
-    SimpleRabbitListenerContainerFactory factory(CachingConnectionFactory cf1) {
+    SimpleRabbitListenerContainerFactory customConnectionfactory(CachingConnectionFactory cf1) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(cf1);
         factory.setAdviceChain(interceptor());

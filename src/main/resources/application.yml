@@ -4,15 +4,6 @@ spring:
     port: 5672
     username: guest
     password: guest
-#    listener:
-#      simple:
-#        default-requeue-rejected: false
-#        retry:
-#          enabled: true
-#          initial-interval: 2s
-#          max-attempts: 3
-#          max-interval: 2s
-#          multiplier: 1
 
 rabbitmq:
   queue:

@@ -12,8 +12,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 @RabbitListener(queues = {"${rabbitmq.queue.main}"},
-        containerFactory = "factory",
-        errorHandler = "globalErrorHandler")
+        containerFactory = "customConnectionfactory")
 public class RabbitMQConsumer {
 
     @RabbitHandler
