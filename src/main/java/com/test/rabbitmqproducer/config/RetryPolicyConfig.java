@@ -53,9 +53,9 @@ public class RetryPolicyConfig {
     }
 
     @Bean()
-    SimpleRabbitListenerContainerFactory customConnectionfactory(CachingConnectionFactory cf1) {
+    SimpleRabbitListenerContainerFactory customConnectionfactory(CachingConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setConnectionFactory(cf1);
+        factory.setConnectionFactory(connectionFactory);
         factory.setAdviceChain(interceptor());
         factory.setMessageConverter(converter());
         return factory;
